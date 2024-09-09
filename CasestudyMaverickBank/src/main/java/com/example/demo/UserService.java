@@ -12,8 +12,8 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+//	@Autowired
+//	private JdbcTemplate jdbcTemplate;
 	
     public String addUser(User user) {
         if (userRepo.existsById(user.getUsername())) {

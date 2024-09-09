@@ -38,8 +38,8 @@ public class User {
 	    @Column(name = "pan_num", nullable = true, unique = true)  
 	    private String panNum;
 
-	    @Column(name = "status", nullable = false)
-	    private String status;
+	    @Column(name = "status")
+	    private String status="NotApproved";
 
 	    @Id
 	    @Column(name = "username", nullable = false, unique = true)

@@ -30,10 +30,10 @@ public class Account {
     @Column(name = "status", nullable = true)
     private String status;
 
-    @Column(name = "username", nullable = true)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "emailid", nullable = true)
+    @Column(name = "emailid")
     private String emailid;
 
     @ManyToOne
@@ -130,5 +130,6 @@ public class Account {
 				+ ", branchName=" + branchName + ", ifscCode=" + ifscCode + ", dateCreated=" + dateCreated + ", status="
 				+ status + ", username=" + username + ", emailid=" + emailid + ", user=" + user + "]";
 	}
+
     
 }

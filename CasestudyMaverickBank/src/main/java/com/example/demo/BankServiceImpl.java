@@ -93,9 +93,15 @@ public class BankServiceImpl implements BankService {
 	        return jdbcTemplate.queryForObject(query, new Object[]{phoneNumber}, String.class);
 	    }
 
-	    private double getCurrentBalance(String accountNumber) throws SQLException {
+	    public double getCurrentBalance(String accountNumber) throws SQLException {
 	        String query = "SELECT balance FROM accounts WHERE account_number = ?";
 	        return jdbcTemplate.queryForObject(query, new Object[]{accountNumber}, Double.class);
 	    }
+	    
+	    public double getCurrentBalanceByusername(String username) throws SQLException {
+	        String query = "SELECT a.balance FROM accounts a join users u on u.username=a.username"
+	        		+ " WHERE u.username = ?";
+	        return jdbcTemplate.queryForObject(query, new Object[]{username}, Double.class);
+	    } 
 	    
 }

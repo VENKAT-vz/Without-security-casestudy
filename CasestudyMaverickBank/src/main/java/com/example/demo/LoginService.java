@@ -3,8 +3,10 @@ package com.example.demo;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 
@@ -15,16 +17,14 @@ public class LoginService {
 	private LoginRepository lrepo;
 	
 	@Autowired
-	private UserRepository userrepo;
+	private JdbcTemplate jdbctemplate;
 	
-//	@Autowired
-//	private JdbcTemplate jdbctemplate;
+    @Autowired
+    private AccountService accountService;
 	
 	public String registeruser(Login login ) throws ClassNotFoundException, SQLException {
-		if((userrepo.findByEmailid(login.getEmailid())!=null || userrepo.findByUsername(login.getUsername())!=null)
-				&& (lrepo.findByUsername(login.getUsername())==null || lrepo.findByEmailid(login.getEmailid())==null)){
-			
-			
+		if((lrepo.findByEmailid(login.getEmailid())==null && lrepo.findByUsername(login.getUsername())==null)){
+		
 			 String encrytedpassword=getCode(login.getPassword());
 			 login.setPassword(encrytedpassword);
 			 lrepo.save(login);
@@ -60,6 +60,33 @@ public class LoginService {
         }  
           
         return encryptedpassword;
+	}
+	
+	public String loginuser(String username, String password) throws ClassNotFoundException, SQLException {
+	    String encryptedPass = getCode(password);
+	    String query = "SELECT COUNT(*) FROM login WHERE username = ? AND password = ?";
+
+	    int count = jdbctemplate.queryForObject(query, new Object[]{username, encryptedPass}, Integer.class);
+	    
+	    if (count > 0) {
+	        List<Account> accounts = accountService.getAccountByNumberByusername(username);
+
+	        StringBuilder result = new StringBuilder("Login successful\n");
+
+	        for (Account account : accounts) {
+	            result.append("In the ")
+	                  .append(account.getAccountType())
+	                  .append(" account of account number ")
+	                  .append(account.getAccountNumber())
+	                  .append("\nThe available balance is ")
+	                  .append(account.getBalance())
+	                  .append("\n\n");
+	        }
+
+	        return result.toString();  
+	    }
+
+	    return "Invalid Credentials. Try again.";
 	}
 
 }
